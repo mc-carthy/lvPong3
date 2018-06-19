@@ -31,26 +31,23 @@ function love.load()
     ballY = VIRTUAL_HEIGHT / 2 - BALL_SIZE
     ballDX = math.random(2) == 1 and 100 or -100
     ballDY = math.random(-50, 50)
+
+    gamestate = 'start'
 end
 
 function love.update(dt)
     if love.keyboard.isDown('w') then
-        player1Y = player1Y - PADDLE_SPEED * dt
+        player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
     end
     if love.keyboard.isDown('s') then
-        player1Y = player1Y + PADDLE_SPEED * dt
+        player1Y = math.min(VIRTUAL_HEIGHT - PADDLE_HEIGHT, player1Y + PADDLE_SPEED * dt)
     end
     if love.keyboard.isDown('up') then
-        player2Y = player2Y - PADDLE_SPEED * dt
+        player2Y = math.max(0, player2Y - PADDLE_SPEED * dt)
     end
     if love.keyboard.isDown('down') then
-        player2Y = player2Y + PADDLE_SPEED * dt
+        player2Y = math.min(VIRTUAL_HEIGHT - PADDLE_HEIGHT, player2Y + PADDLE_SPEED * dt)
     end
-    
-    if player1Y < 0 then player1Y = 0 end
-    if player1Y > VIRTUAL_HEIGHT - PADDLE_HEIGHT then player1Y = VIRTUAL_HEIGHT - PADDLE_HEIGHT end
-    if player2Y < 0 then player2Y = 0 end
-    if player2Y > VIRTUAL_HEIGHT - PADDLE_HEIGHT then player2Y = VIRTUAL_HEIGHT - PADDLE_HEIGHT end
 
     ballX = ballX + ballDX * dt
     ballY = ballY + ballDY * dt
