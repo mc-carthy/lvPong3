@@ -47,13 +47,30 @@ function love.update(dt)
         player2Y = player2Y + PADDLE_SPEED * dt
     end
     
-    if player1Y <= 0 then player1Y = 0 end
-    if player1Y >= VIRTUAL_HEIGHT - PADDLE_HEIGHT then player1Y = VIRTUAL_HEIGHT - PADDLE_HEIGHT end
-    if player2Y <= 0 then player2Y = 0 end
-    if player2Y >= VIRTUAL_HEIGHT - PADDLE_HEIGHT then player2Y = VIRTUAL_HEIGHT - PADDLE_HEIGHT end
+    if player1Y < 0 then player1Y = 0 end
+    if player1Y > VIRTUAL_HEIGHT - PADDLE_HEIGHT then player1Y = VIRTUAL_HEIGHT - PADDLE_HEIGHT end
+    if player2Y < 0 then player2Y = 0 end
+    if player2Y > VIRTUAL_HEIGHT - PADDLE_HEIGHT then player2Y = VIRTUAL_HEIGHT - PADDLE_HEIGHT end
 
     ballX = ballX + ballDX * dt
     ballY = ballY + ballDY * dt
+
+    if ballX < 0 then 
+        ballX = 0
+        ballDX = -ballDX
+    end
+    if ballX > VIRTUAL_WIDTH - BALL_SIZE then 
+        ballX = VIRTUAL_WIDTH - BALL_SIZE
+        ballDX = -ballDX
+    end
+    if ballY < 0 then 
+        ballY = 0
+        ballDY = -ballDY
+    end
+    if ballY > VIRTUAL_HEIGHT - BALL_SIZE then 
+        ballY = VIRTUAL_HEIGHT - BALL_SIZE
+        ballDY = -ballDY
+    end
 end
 
 function love.draw()
