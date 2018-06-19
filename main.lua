@@ -1,11 +1,22 @@
 require('src.utils.debug')
+local Push = require ('src.lib.push')
+
+VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 432, 243
+WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
 
 function love.load()
-    WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
+    love.graphics.setDefaultFilter('nearest', 'nearest')
+    Push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
+        fullscreen = false,
+        resizable = false,
+        vsync = true
+    })
 end
 
 function love.draw()
-    love.graphics.printf('Hello Pong!', 0, WINDOW_HEIGHT / 2 - 6,WINDOW_WIDTH, 'center')
+    Push:apply('start')
+    love.graphics.printf('Hello Pong!', 0, VIRTUAL_HEIGHT / 2 - 6, VIRTUAL_WIDTH, 'center')
+    Push:apply('end')
 end
 
 function love.keypressed(key)
