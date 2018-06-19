@@ -49,35 +49,40 @@ function love.update(dt)
         player2Y = math.min(VIRTUAL_HEIGHT - PADDLE_HEIGHT, player2Y + PADDLE_SPEED * dt)
     end
 
-    ballX = ballX + ballDX * dt
-    ballY = ballY + ballDY * dt
+    if gamestate == 'play' then
+        ballX = ballX + ballDX * dt
+        ballY = ballY + ballDY * dt
 
-    if ballX < 0 then 
-        ballX = 0
-        ballDX = -ballDX
-    end
-    if ballX > VIRTUAL_WIDTH - BALL_SIZE then 
-        ballX = VIRTUAL_WIDTH - BALL_SIZE
-        ballDX = -ballDX
-    end
-    if ballY < 0 then 
-        ballY = 0
-        ballDY = -ballDY
-    end
-    if ballY > VIRTUAL_HEIGHT - BALL_SIZE then 
-        ballY = VIRTUAL_HEIGHT - BALL_SIZE
-        ballDY = -ballDY
+        if ballX < 0 then 
+            ballX = 0
+            ballDX = -ballDX
+        end
+        if ballX > VIRTUAL_WIDTH - BALL_SIZE then 
+            ballX = VIRTUAL_WIDTH - BALL_SIZE
+            ballDX = -ballDX
+        end
+        if ballY < 0 then 
+            ballY = 0
+            ballDY = -ballDY
+        end
+        if ballY > VIRTUAL_HEIGHT - BALL_SIZE then 
+            ballY = VIRTUAL_HEIGHT - BALL_SIZE
+            ballDY = -ballDY
+        end
     end
 end
 
 function love.draw()
     Push:apply('start')
     love.graphics.clear(0.16, 0.18, 0.21, 1)
-    love.graphics.setFont(smallFont)
-    love.graphics.printf('Hello Pong!', 0, 20, VIRTUAL_WIDTH, 'center')
-    love.graphics.setFont(scoreFont)
-    love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
-    love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
+    if gamestate == 'start' then
+        love.graphics.setFont(smallFont)
+        love.graphics.printf('Press enter to Start!', 0, 20, VIRTUAL_WIDTH, 'center')
+    elseif gamestate == 'play' then
+        love.graphics.setFont(scoreFont)
+        love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
+        love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
+    end
     love.graphics.rectangle('fill', PADDLE_EDGE_PADDING, player1Y, PADDLE_WIDTH, PADDLE_HEIGHT)
     love.graphics.rectangle('fill', VIRTUAL_WIDTH - PADDLE_EDGE_PADDING - PADDLE_WIDTH, player2Y, PADDLE_WIDTH, PADDLE_HEIGHT)
     love.graphics.rectangle('fill', ballX, ballY, BALL_SIZE, BALL_SIZE)
@@ -87,5 +92,12 @@ end
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
+    end
+    if key == 'enter' or key == 'return' then
+        if gamestate == 'start' then
+            gamestate = 'play'
+        else
+            love.load()
+        end
     end
 end
