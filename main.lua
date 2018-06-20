@@ -1,8 +1,8 @@
 -- require('src.utils.debug')
 Push = require('src.lib.push')
 Class = require('src.lib.class')
-local Paddle = require('src.entities.paddle')
-local Ball = require('src.entities.ball')
+require('src.entities.paddle')
+require('src.entities.ball')
 
 VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 432, 243
 WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
