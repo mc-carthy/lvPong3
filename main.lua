@@ -30,7 +30,7 @@ function love.load()
 
     Push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
-        resizable = false,
+        resizable = true,
         vsync = true
     })
 
@@ -138,6 +138,10 @@ function love.draw()
     ball:draw()
     displayFps()
     Push:apply('end')
+end
+
+function love.resize(w, h)
+    Push:resize(w, h)
 end
 
 function love.keypressed(key)
