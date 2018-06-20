@@ -27,7 +27,9 @@ function love.load()
 
     player1 = Paddle(PADDLE_EDGE_PADDING, 30, PADDLE_WIDTH, PADDLE_HEIGHT)
     player2 = Paddle(VIRTUAL_WIDTH - PADDLE_WIDTH - PADDLE_EDGE_PADDING, VIRTUAL_HEIGHT - 30 - PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_HEIGHT)
-    
+    player1Score = 0
+    player2Score = 0
+
     ball = Ball(VIRTUAL_WIDTH / 2 - BALL_SIZE / 2, VIRTUAL_HEIGHT / 2 - BALL_SIZE / 2, BALL_SIZE, BALL_SIZE)
 
     gamestate = 'start'
@@ -67,6 +69,15 @@ function love.update(dt)
         end
 
         ball:update(dt)
+
+        if ball.x < 0 then
+            player2Score = player2Score + 1
+            ball:reset()
+        end
+        if ball.x > VIRTUAL_WIDTH then
+            player1Score = player1Score + 1
+            ball:reset()
+        end
     end
     
     player1:update(dt)
@@ -81,8 +92,8 @@ function love.draw()
         love.graphics.printf('Press enter to Start!', 0, 20, VIRTUAL_WIDTH, 'center')
     elseif gamestate == 'play' then
         love.graphics.setFont(scoreFont)
-        love.graphics.print(tostring(0), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
-        love.graphics.print(tostring(0), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
+        love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
+        love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
     end
     player1:draw()
     player2:draw()
