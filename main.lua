@@ -14,6 +14,8 @@ PADDLE_EDGE_PADDING = 10
 
 BALL_SIZE = 4
 
+SCORE_TO_WIN = 10
+
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     math.randomseed(os.time())
@@ -64,15 +66,25 @@ function love.update(dt)
 
         if ball.x < 0 then
             player2Score = player2Score + 1
-            gamestate = 'serve'
             servingPlayer = 1
-            ball:reset()
+            if player2Score >= SCORE_TO_WIN then
+                winningPlayer = 2
+                gamestate = 'done'
+            else
+                gamestate = 'serve'
+                ball:reset()
+            end
         end
         if ball.x > VIRTUAL_WIDTH then
             player1Score = player1Score + 1
-            gamestate = 'serve'
             servingPlayer = 2
-            ball:reset()
+            if player1Score >= SCORE_TO_WIN then
+                winningPlayer = 1
+                gamestate = 'done'
+            else
+                gamestate = 'serve'
+                ball:reset()
+            end
         end
     end
 
@@ -106,6 +118,9 @@ function love.draw()
         love.graphics.setFont(scoreFont)
         love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
         love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
+    elseif gamestate == 'done' then
+        love.graphics.setFont(smallFont)
+        love.graphics.printf('Player ' .. winningPlayer .. ' wins!', 0, 20, VIRTUAL_WIDTH, 'center')
     end
     player1:draw()
     player2:draw()
@@ -121,9 +136,21 @@ function love.keypressed(key)
     if key == 'enter' or key == 'return' then
         if gamestate == 'serve' then
             gamestate = 'play'
-        else
-            ball:reset()
+        elseif gamestate == 'done' then
+            gamestate = 'serve'
+            resetGame()
         end
+    end
+end
+
+function resetGame()
+    ball:reset()
+    player1Score = 0
+    player2Score = 0
+    if winningPlayer == 1 then
+        servingPlayer = 2
+    elseif winningPlayer == 2 then
+        servingPlayer = 1
     end
 end
 
