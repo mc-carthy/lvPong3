@@ -59,14 +59,14 @@ function love.update(dt)
             ball.dx = -ball.dx * 1.05
             ball.x = player1.x + PADDLE_WIDTH
             ball.dy = ball.dy + math.random(-50, 50)
-            love.audio.play(sfx.paddleHit)
+            sfx.paddleHit:play()
         end
 
         if ball:collides(player2) then
             ball.dx = -ball.dx * 1.05
             ball.x = player2.x - BALL_SIZE            
             ball.dy = ball.dy + math.random(-50, 50)
-            love.audio.play(sfx.paddleHit)
+            sfx.paddleHit:play()
         end
 
         ball:update(dt)
@@ -81,7 +81,7 @@ function love.update(dt)
                 gamestate = 'serve'
                 ball:reset()
             end
-            love.audio.play(sfx.score)
+            sfx.score:play()
         end
         if ball.x > VIRTUAL_WIDTH then
             player1Score = player1Score + 1
@@ -93,7 +93,7 @@ function love.update(dt)
                 gamestate = 'serve'
                 ball:reset()
             end
-            love.audio.play(sfx.score)
+            sfx.score:play()
         end
     end
 

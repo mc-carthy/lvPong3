@@ -37,12 +37,12 @@ function Ball:update(dt)
     if self.y < 0 then 
         self.y = 0
         self.dy = -self.dy
-        love.audio.play(sfx.wallHit)
+        sfx.wallHit:play()
     end
     if self.y > VIRTUAL_HEIGHT - self.h then 
         self.y = VIRTUAL_HEIGHT - self.h
         self.dy = -self.dy
-        love.audio.play(sfx.wallHit)
+        sfx.wallHit:play()
     end
 end
 
