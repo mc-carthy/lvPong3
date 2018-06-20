@@ -72,6 +72,7 @@ function love.draw()
     player1:draw()
     player2:draw()
     ball:draw()
+    displayFps()
     Push:apply('end')
 end
 
@@ -86,4 +87,10 @@ function love.keypressed(key)
             ball:reset()
         end
     end
+end
+
+function displayFps()
+    love.graphics.setFont(smallFont)
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
 end
