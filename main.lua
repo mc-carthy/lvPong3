@@ -17,10 +17,17 @@ BALL_SIZE = 4
 SCORE_TO_WIN = 10
 
 function love.load()
+
     love.graphics.setDefaultFilter('nearest', 'nearest')
     math.randomseed(os.time())
     smallFont = love.graphics.newFont('src/assets/fonts/font.ttf', 8)
     scoreFont = love.graphics.newFont('src/assets/fonts/font.ttf', 32)
+    sfx = {
+        ['paddleHit'] = love.audio.newSource('src/assets/sfx/paddle_hit.wav', 'static'),
+        ['score'] = love.audio.newSource('src/assets/sfx/score.wav', 'static'),
+        ['wallHit'] = love.audio.newSource('src/assets/sfx/wall_hit.wav', 'static')
+    }
+
     Push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         resizable = false,
@@ -51,15 +58,15 @@ function love.update(dt)
         if ball:collides(player1) then
             ball.dx = -ball.dx * 1.05
             ball.x = player1.x + PADDLE_WIDTH
-            
             ball.dy = ball.dy + math.random(-50, 50)
+            love.audio.play(sfx.paddleHit)
         end
 
         if ball:collides(player2) then
             ball.dx = -ball.dx * 1.05
-            ball.x = player2.x - BALL_SIZE
-            
+            ball.x = player2.x - BALL_SIZE            
             ball.dy = ball.dy + math.random(-50, 50)
+            love.audio.play(sfx.paddleHit)
         end
 
         ball:update(dt)
@@ -74,6 +81,7 @@ function love.update(dt)
                 gamestate = 'serve'
                 ball:reset()
             end
+            love.audio.play(sfx.score)
         end
         if ball.x > VIRTUAL_WIDTH then
             player1Score = player1Score + 1
@@ -85,6 +93,7 @@ function love.update(dt)
                 gamestate = 'serve'
                 ball:reset()
             end
+            love.audio.play(sfx.score)
         end
     end
 
@@ -114,14 +123,16 @@ function love.draw()
     if gamestate == 'serve' then
         love.graphics.setFont(smallFont)
         love.graphics.printf('Player ' .. servingPlayer .. ' Press enter to serve!', 0, 20, VIRTUAL_WIDTH, 'center')
-    elseif gamestate == 'play' then
-        love.graphics.setFont(scoreFont)
-        love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
-        love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
+    -- elseif gamestate == 'play' then
     elseif gamestate == 'done' then
-        love.graphics.setFont(smallFont)
+        love.graphics.setFont(scoreFont)
         love.graphics.printf('Player ' .. winningPlayer .. ' wins!', 0, 20, VIRTUAL_WIDTH, 'center')
+        love.graphics.setFont(smallFont)
+        love.graphics.printf('Press Enter to restart', 0, 60, VIRTUAL_WIDTH, 'center')
     end
+    love.graphics.setFont(scoreFont)
+    love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
+    love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
     player1:draw()
     player2:draw()
     ball:draw()
