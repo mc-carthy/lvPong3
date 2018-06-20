@@ -51,6 +51,21 @@ function love.update(dt)
     end
 
     if gamestate == 'play' then
+
+        if ball:collides(player1) then
+            ball.dx = -ball.dx * 1.05
+            ball.x = player1.x + PADDLE_WIDTH
+            
+            ball.dy = ball.dy + math.random(-50, 50)
+        end
+
+        if ball:collides(player2) then
+            ball.dx = -ball.dx * 1.05
+            ball.x = player2.x - BALL_SIZE
+            
+            ball.dy = ball.dy + math.random(-50, 50)
+        end
+
         ball:update(dt)
     end
     
