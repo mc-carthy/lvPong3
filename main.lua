@@ -32,27 +32,19 @@ function love.load()
 
     ball = Ball(VIRTUAL_WIDTH / 2 - BALL_SIZE / 2, VIRTUAL_HEIGHT / 2 - BALL_SIZE / 2, BALL_SIZE, BALL_SIZE)
 
-    gamestate = 'start'
+    servingPlayer = 1
+    gamestate = 'serve'
 end
 
 function love.update(dt)
-    if love.keyboard.isDown('w') then
-        player1.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('s') then
-        player1.dy = PADDLE_SPEED
-    else
-        player1.dy = 0
-    end
-
-    if love.keyboard.isDown('up') then
-        player2.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('down') then
-        player2.dy = PADDLE_SPEED
-    else
-        player2.dy = 0
-    end
-
-    if gamestate == 'play' then
+    if gamestate == 'serve' then
+        ball.dy = math.random(-50, 50)
+        if servingPlayer == 1 then
+            ball.dx = math.random(100, 200)
+        elseif servingPlayer == 2 then
+            ball.dx = -math.random(100, 200)
+        end
+    elseif gamestate == 'play' then
 
         if ball:collides(player1) then
             ball.dx = -ball.dx * 1.05
@@ -72,12 +64,32 @@ function love.update(dt)
 
         if ball.x < 0 then
             player2Score = player2Score + 1
+            gamestate = 'serve'
+            servingPlayer = 1
             ball:reset()
         end
         if ball.x > VIRTUAL_WIDTH then
             player1Score = player1Score + 1
+            gamestate = 'serve'
+            servingPlayer = 2
             ball:reset()
         end
+    end
+
+    if love.keyboard.isDown('w') then
+        player1.dy = -PADDLE_SPEED
+    elseif love.keyboard.isDown('s') then
+        player1.dy = PADDLE_SPEED
+    else
+        player1.dy = 0
+    end
+
+    if love.keyboard.isDown('up') then
+        player2.dy = -PADDLE_SPEED
+    elseif love.keyboard.isDown('down') then
+        player2.dy = PADDLE_SPEED
+    else
+        player2.dy = 0
     end
     
     player1:update(dt)
@@ -87,9 +99,9 @@ end
 function love.draw()
     Push:apply('start')
     love.graphics.clear(0.16, 0.18, 0.21, 1)
-    if gamestate == 'start' then
+    if gamestate == 'serve' then
         love.graphics.setFont(smallFont)
-        love.graphics.printf('Press enter to Start!', 0, 20, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf('Player ' .. servingPlayer .. ' Press enter to serve!', 0, 20, VIRTUAL_WIDTH, 'center')
     elseif gamestate == 'play' then
         love.graphics.setFont(scoreFont)
         love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
@@ -107,7 +119,7 @@ function love.keypressed(key)
         love.event.quit()
     end
     if key == 'enter' or key == 'return' then
-        if gamestate == 'start' then
+        if gamestate == 'serve' then
             gamestate = 'play'
         else
             ball:reset()
